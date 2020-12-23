@@ -18,6 +18,7 @@ class BoardGame:         #TODO : for every cards, create a list
         self.size = len(config_board_game) #nb of cases --> equal to the sum of cases
         self.list_of_case = []
         self.initialiseListOfCards(config_board_game)
+        self.index = 0
 
     def initialiseListOfCards(self, config_board_game):     #TODO : sort the card by the order
         i = 0
@@ -28,6 +29,13 @@ class BoardGame:         #TODO : for every cards, create a list
                 case = CaseEffect(config_board_game[i].values()[0]) 
             i += 1
             self.list_of_case.append(case)
+
+    def move(self, dice_score):
+        #print("Nous sommes passés de : "+str(self.index%self.size)+" à "+str((self.index + dice_score)%self.size)+" avec un lancé de dés de :"+str(dice_score))
+        print(str(self.index) +" "+ str(self.index%self.size))
+        print(dice_score)
+        self.index += dice_score
+        print(str(self.index)+" "+str(self.index%self.size)+"\n")
 
 class Case: #TODO : sum every occurences
     def __init__(self, position):
@@ -65,11 +73,15 @@ class CaseTerritory(Case):    #TODO : define color, average price and position
 class Card:
     def __init__(self, config_card):
         self.position = 1
-        self.card_effect = config_card["type"] # Each card_effect will be represented by a number
+        print(config_card)
+        self.card_effect = config_card["card_effect"] # Each card_effect will be represented by a number
         pass
 
     def __str__(self):
         return (" Le type de la carte est : "+str(self.card_effect)+" sa position est "+str(self.position))
+
+    def readCard(self):
+        pass
 
 class CardStack:    #TODO : create buffer circular functions to simulate stack of cards
     def __init__(self, config_card_stack):
@@ -101,10 +113,19 @@ def play(): #handle the game
     boardgame = BoardGame(config["MonopolyStatistics"]["Case"])
     card_stack_chance = CardStack(config["MonopolyStatistics"]["Cards"][0:len(config["MonopolyStatistics"]["Cards"])/2]) 
     card_stack_community_chest = CardStack(config["MonopolyStatistics"]["Cards"][len(config["MonopolyStatistics"]["Cards"])/2:len(config["MonopolyStatistics"]["Cards"])]) 
-    print(card_stack_chance.pullCard())
+    i = 0
+    while i < game.nb_of_throw:
+        boardgame.move(throwDices())
+        i += 1
     pass
 
 def throwDices():    #TODO : generate 2 randint between 1 and 6
+    dice1 = random.randint(1,6)
+    dice2 = random.randint(1,6)
+    dice = dice1 + dice2
+    return dice
+    if (dice1 == dice2): # gérer le passage en prison
+        pass 
     pass
 
 def movePlayer():    #TODO : change the position of the player

@@ -30,6 +30,7 @@ Carte effet :
 * 5 : Aller en prison
 * 6 : Parc gratuit
 * 7 : Taxe sur la fortune
+* 8 : start
 
 liste des effets :
 Chance :
