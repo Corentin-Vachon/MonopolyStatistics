@@ -1,0 +1,328 @@
+MonopolyStatistics : {
+  Rules : {
+    Game : {
+      dice_faces : 6,
+      nb_of_throw : 1000,
+      double_to_go_to_prison : 3,
+    },
+    GameBoard : {
+      size : 40,
+    },
+  },
+  Case : [
+    territory : {
+      position : 1,
+      color : "brown",
+      price : 250
+    },
+    effect : {
+      position : 2,
+      case_effect : 1
+    },
+    territory : {
+      position : 3,
+      color : "brown",
+      price : 450
+    },
+    effect : {
+      position : 4,
+      case_effect : 2
+    },
+    territory : {
+      position : 5,
+      color : "gare",
+      price : 200
+    },
+    territory : {
+      position : 6,
+      color : "blueligth",
+      price : 550
+    },
+    effect : {
+      position : 7,
+      case_effect : 3
+    },
+    territory : {
+      position : 8,
+      color : "blueligth",
+      price : 550
+    },
+    territory : {
+      position : 9,
+      color : "blueligth",
+      price : 600
+    },
+    effect : {
+      position : 10,
+      case_effect : 4
+    },
+    territory : {
+      position : 11,
+      color : "pruple",
+      price : 750
+    },
+  territory : {
+      position : 12,
+      color : "service",
+      price : 120
+    },
+    territory : {
+      position : 13,
+      color : "purple",
+      price : 750
+    },
+    territory : {
+      position : 14,
+      color : "purple",
+      price : 900
+    },
+    territory : {
+      position : 15,
+      color : "gare",
+      price : 200
+    },
+    territory : {
+      position : 16,
+      color : "orange",
+      price : 950
+    },
+    effect : {
+      position : 17,
+      case_effect : 4
+    },
+    territory : {
+      position : 18,
+      color : "orange",
+      price : 950
+    },
+  territory : {
+      position : 19,
+      color : "orange",
+      price : 1000
+    },
+    effect : {
+      position : 20,
+      case_effect : 6
+    },
+    territory : {
+      position : 21,
+      color : "red",
+      price : 1050
+    },
+    effect : {
+      position : 22,
+      case_effect : 3
+    },
+    territory : {
+      position : 23,
+      color : "red",
+      price : 1050
+    },
+    territory : {
+      position : 24,
+      color : "red",
+      price : 1100
+    },
+    territory : {
+      position : 25,
+      color : "gare",
+      price : 200
+    },
+    territory : {
+      position : 26,
+      color : "yellow",
+      price : 1150
+    },
+    territory : {
+      position : 27,
+      color : "yellow",
+      price : 1150
+    },
+    territory : {
+      position : 28,
+      color : "service",
+      price : 120
+    },
+    territory : {
+      position : 29,
+      color : "yellow",
+      price : 1200
+    },
+    effect : {
+      position : 30,
+      case_effect : 5
+    },
+    territory : {
+      position : 31,
+      color : "green",
+      price : 1275
+    },
+    territory : {
+      position : 32,
+      color : "green",
+      price : 1275
+    },
+    effect : {
+      position : 33,
+      case_effect : 1
+    },
+    territory : {
+      position : 34,
+      color : "green",
+      price : 1400
+    },
+    territory : {
+      position : 35,
+      color : "gare",
+      price : 200
+    },
+    effect : {
+      position : 36,
+      case_effect : 3
+    },
+    territory : {
+      position : 37,
+      color : "darkblue",
+      price : 1500
+    },
+    effect : {
+      position : 38,
+      case_effect : 7
+    },
+    territory : {
+      position : 39,
+      color : "darkblue",
+      price : 2000
+    },
+  ],
+  Cards : [
+      chance : {
+        position : 1,
+        card_effect : 1
+      },
+      chance : {
+        position : 1,
+        card_effect : 2
+      },
+      chance : {
+        position : 1,
+        card_effect : 3
+      },
+      chance : {
+        position : 1,
+        card_effect : 3
+      },
+      chance : {
+        position : 1,
+        card_effect : 3
+      },
+      chance : {
+        position : 1,
+        card_effect : 4
+      },
+      chance : {
+        position : 1,
+        card_effect : 5
+      },
+      chance : {
+        position : 1,
+        card_effect : 6
+      },
+      chance : {
+        position : 1,
+        card_effect : 7
+      },
+      chance : {
+        position : 1,
+        card_effect : 8
+      },
+      chance : {
+        position : 1,
+        card_effect : 9
+      },
+      chance : {
+        position : 1,
+        card_effect : 9
+      },
+      chance : {
+        position : 1,
+        card_effect : 9
+      },
+      chance : {
+        position : 1,
+        card_effect : 9
+      },
+      chance : {
+        position : 1,
+        card_effect : 9
+      },
+      chance : {
+        position : 1,
+        card_effect : 9
+      },
+    community_chest : {
+        position : 1,        
+        card_effect : 1
+      },
+      community_chest : {
+        position : 1,
+        card_effect : 2
+      },
+      community_chest : {
+        position : 1,
+        card_effect : 3
+      },
+      community_chest : {
+          position : 1,
+          card_effect : 3
+      },
+      community_chest : {
+          position : 1,
+          card_effect : 3
+      },
+      community_chest : {
+          position : 1,
+          card_effect : 3
+      },
+      community_chest : {
+          position : 1,
+          card_effect : 3
+      },
+      community_chest : {
+          position : 1,
+          card_effect : 3
+      },
+      community_chest : {
+          position : 1,
+          card_effect : 3
+      },
+      community_chest : {
+          position : 1,
+          card_effect : 3
+      },
+      community_chest : {
+          position : 1,
+          card_effect : 3
+      },
+      community_chest : {
+          position : 1,
+          card_effect : 3
+      },
+      community_chest : {
+          position : 1,
+          card_effect : 3
+      },
+      community_chest : {
+          position : 1,
+          card_effect : 3
+      },
+      community_chest : {
+          position : 1,
+          card_effect : 3
+      },
+      community_chest : {
+          position : 1,
+          card_effect : 3
+      },
+    ]
+}
