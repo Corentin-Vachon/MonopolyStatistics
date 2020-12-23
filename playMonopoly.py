@@ -17,8 +17,8 @@ class BoardGame:         #TODO : for every cards, create a list
     def __init__(self, config_board_game):
         self.size = len(config_board_game) #nb of cases --> equal to the sum of cases
         self.list_of_case = []
-        self.initialiseListOfCards(config_board_game)
         self.index = 0
+        self.initialiseListOfCards(config_board_game)
 
     def initialiseListOfCards(self, config_board_game):     #TODO : sort the card by the order
         i = 0
@@ -30,34 +30,60 @@ class BoardGame:         #TODO : for every cards, create a list
             i += 1
             self.list_of_case.append(case)
 
+    def __str__(self):
+        for i in self.list_of_cards:
+            return (i)
+
     def move(self, dice_score):
         #print("Nous sommes passés de : "+str(self.index%self.size)+" à "+str((self.index + dice_score)%self.size)+" avec un lancé de dés de :"+str(dice_score))
-        print(str(self.index) +" "+ str(self.index%self.size))
-        print(dice_score)
         self.index += dice_score
-        print(str(self.index)+" "+str(self.index%self.size)+"\n")
+        card = self.list_of_case[self.index%self.size]
+        if (card.type == "territory"):  
+            card.arrived()
+        elif  card.type == "effect" :
+            if card.case_effect == 1:
+                pass
+            if card.case_effect == 1:
+                pass
+            if card.case_effect == 1:
+                pass
+            if card.case_effect == 1:
+                pass
+            if card.case_effect == 1:
+                pass
+            if card.case_effect == 1:
+                pass
+            if card.case_effect == 1:
+                pass
+            if card.case_effect == 1:
+                pass
 
 class Case: #TODO : sum every occurences
-    def __init__(self, position):
+    def __init__(self, position, type):
         self.position = position
         self.occurs = 0
+        self.type = type
         pass
+
+    def __str__(self):
+        return ("La case : "+str(self.position))
 
     def arrived(self):
         self.occurs += 1
+
         pass
 
 class CaseEffect(Case): #TODO : define type (chance, community), effect and target
     def __init__(self, case_territory_config):
-        Case.__init__(self, case_territory_config["position"])
+        Case.__init__(self, case_territory_config["position"], "effect")
         self.case_effect = case_territory_config["case_effect"] # Each case_effect_type will be represented by a number
 
     def __str__(self):
-            return ("La case : "+str(self.position))
+            return ("Case is : "+str(self.position)+" --> this is an effect")
 
 class CaseTerritory(Case):    #TODO : define color, average price and position
     def __init__(self, case_territory_config):
-        Case.__init__(self, case_territory_config["position"])
+        Case.__init__(self, case_territory_config["position"], "territory")
         self.color = case_territory_config["color"] #color of the card
         self.price = case_territory_config["price"] #Price of the hotel
         self.occurs = 0
@@ -68,12 +94,11 @@ class CaseTerritory(Case):    #TODO : define color, average price and position
         pass
 
     def __str__(self):
-            return ("La case : "+str(self.position))
+            return ("Case is : "+str(self.position)+" --> this is a territory")
 
 class Card:
     def __init__(self, config_card):
         self.position = 1
-        print(config_card)
         self.card_effect = config_card["card_effect"] # Each card_effect will be represented by a number
         pass
 
