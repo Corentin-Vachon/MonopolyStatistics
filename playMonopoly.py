@@ -233,32 +233,44 @@ def throwDices():    #generate 2 randint between 1 and 6
 
 def makeCamembert(l): #handle the display
     l.sort(key = lambda l: l.color)
-    labels = [x.name for x in l ]
-    sizes = [x.occurs for x in l ]
-    colors = [x.color for x in l ]
-    colors = [x if x != "gare" else "white" for x in colors ]
-    colors = [x if x != "service" else "grey" for x in colors ]
+    # labels = [x.name for x in l ]
+    # sizes = [x.occurs for x in l ]
+    # colors = [x.color for x in l ]
+    # colors = [x if x != "gare" else "white" for x in colors ]
+    # colors = [x if x != "service" else "grey" for x in colors ]
+    # colors = [x if x != "blueligth" else "blue" for x in colors ]
+
+    # fig1, ax1 = plt.subplots()
+    # ax1.pie(sizes, labels=labels,colors=colors,autopct = lambda x: str(round(x, 2)) + '%')
+    # ax1.axis('equal')  # Equal aspect ratio ensures that pie is drawn as a circle.
+    # plt.show()
+    sizes_out, labels_out, colors = [], [], []
+    for i in l:
+        if i.color not in labels_out:
+            labels_out.append(i.color)
+            sizes_out.append(i.occurs)
+            if (i.color == "gare"):colors.append("white")
+            elif (i.color == "service"):colors.append("grey")
+            else : colors.append(i.color)
+        else :
+            sizes_out[len(sizes_out)-1] += i.occurs
     colors = [x if x != "blueligth" else "blue" for x in colors ]
-    fig1, ax1 = plt.subplots()
-    ax1.pie(sizes, labels=labels,colors=colors,autopct = lambda x: str(round(x, 2)) + '%')
-    ax1.axis('equal')  # Equal aspect ratio ensures that pie is drawn as a circle.
-    plt.show()
-    # fig, ax = plt.subplots()
-    # ax.axis('equal')
-    # width = 0.3
+    sizes_in = [x.occurs for x in l ]
+    labels_in = [x.name for x in l ]
+
+    fig, ax = plt.subplots()
+    ax.axis('equal')
+    width = 0.3
 
     cm = plt.get_cmap("tab20c")
-    cout = cm(np.arange(3)*4)
-    pie, _ = ax.pie([120,77,39], radius=1, labels=list("ABC"), colors=cout)
+    cout = cm(np.arange(10)*4)
+    pie, _ = ax.pie(sizes_out, radius=1, labels=labels_out, colors=colors)
     plt.setp( pie, width=width, edgecolor='white')
 
-    cin = cm(np.array([1,2,5,6,9,10]))
-    labels = list(map("".join, zip(list("aabbcc"),map(str, [1,2]*3))))
-    pie2, _ = ax.pie([60,60,37,40,29,10], radius=1-width, labels=labels,
-                                        labeldistance=0.7, colors=cin)
+    cin = cm(np.array([1,2,3,4,5,6,7,8,9,10]))
+    pie2, _ = ax.pie(sizes_in, radius=1-width, labels=labels_in,labeldistance=0.7, colors=cin)
     plt.setp( pie2, width=width, edgecolor='white')
     plt.show()
-
 
 def getConfig(): #read the config from the configuration file
     with open('config.yml') as file:
