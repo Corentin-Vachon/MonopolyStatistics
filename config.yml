@@ -5,7 +5,7 @@ MonopolyStatistics : {
   Rules : {
     Game : {
       dice_faces : 6,
-      nb_of_throw : 1000000,
+      nb_of_throw : 10000000,
       double_to_go_to_prison : 3,
     },
     GameBoard : {

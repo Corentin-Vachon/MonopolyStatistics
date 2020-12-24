@@ -34,10 +34,10 @@ class BoardGame:         # the brain of the program, it manages the progression 
     def initialiseListOfCards(self, config_board_game):     #create a stack of card for both territory and effect cards
         i = 0
         while i < (self.size):
-            if (config_board_game[i].keys()[0] == "territory"):
-                case = CaseTerritory(config_board_game[i].values()[0]) 
-            elif (config_board_game[i].keys()[0] == "effect"):
-                case = CaseEffect(config_board_game[i].values()[0]) 
+            if (list(config_board_game[i].keys())[0] == "territory"):
+                case = CaseTerritory(list(config_board_game[i].values())[0]) 
+            elif (list(config_board_game[i].keys())[0] == "effect"):
+                case = CaseEffect(list(config_board_game[i].values())[0]) 
             i += 1
             self.list_of_case.append(case)
 
@@ -186,7 +186,7 @@ class CardStack:    #create buffer circular functions to simulate stack of cards
     def __init__(self, config_card_stack):
         self.size_stack = len(config_card_stack)
         self.list_of_cards = []
-        self.type = config_card_stack[0].keys()[0]
+        self.type = list(config_card_stack[0].keys())[0]
         self.initialiseStack(config_card_stack)
         self.occur = 0
 
@@ -212,8 +212,8 @@ def play(): #handle the game
     DEFINEIFPRINT = int(config["MonopolyStatistics"]["Config"]["print"])
     game = Game(config["MonopolyStatistics"]["Rules"]["Game"])
     boardgame = BoardGame(config["MonopolyStatistics"]["Case"])
-    card_stack_chance = CardStack(config["MonopolyStatistics"]["Cards"][0:len(config["MonopolyStatistics"]["Cards"])/2]) 
-    card_stack_community_chest = CardStack(config["MonopolyStatistics"]["Cards"][len(config["MonopolyStatistics"]["Cards"])/2:len(config["MonopolyStatistics"]["Cards"])]) 
+    card_stack_chance = CardStack(config["MonopolyStatistics"]["Cards"][0:int(len(config["MonopolyStatistics"]["Cards"])/2)]) 
+    card_stack_community_chest = CardStack(config["MonopolyStatistics"]["Cards"][int(len(config["MonopolyStatistics"]["Cards"])/2):len(config["MonopolyStatistics"]["Cards"])]) 
     i = 0
     while i < game.nb_of_throw: #play the number of turn defined
         game.newTurn()
@@ -243,6 +243,22 @@ def makeCamembert(l): #handle the display
     ax1.pie(sizes, labels=labels,colors=colors,autopct = lambda x: str(round(x, 2)) + '%')
     ax1.axis('equal')  # Equal aspect ratio ensures that pie is drawn as a circle.
     plt.show()
+    # fig, ax = plt.subplots()
+    # ax.axis('equal')
+    # width = 0.3
+
+    cm = plt.get_cmap("tab20c")
+    cout = cm(np.arange(3)*4)
+    pie, _ = ax.pie([120,77,39], radius=1, labels=list("ABC"), colors=cout)
+    plt.setp( pie, width=width, edgecolor='white')
+
+    cin = cm(np.array([1,2,5,6,9,10]))
+    labels = list(map("".join, zip(list("aabbcc"),map(str, [1,2]*3))))
+    pie2, _ = ax.pie([60,60,37,40,29,10], radius=1-width, labels=labels,
+                                        labeldistance=0.7, colors=cin)
+    plt.setp( pie2, width=width, edgecolor='white')
+    plt.show()
+
 
 def getConfig(): #read the config from the configuration file
     with open('config.yml') as file:
