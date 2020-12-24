@@ -5,8 +5,7 @@ import random
 import matplotlib.pyplot as plt
 import numpy as np
 
-
-DEFINEIFPRINT = 1
+DEFINEIFPRINT = 0
 
 class Game:     #TODO : define game var like : duration, nb of turn
     def __init__(self, config_game):
@@ -24,15 +23,15 @@ class Game:     #TODO : define game var like : duration, nb of turn
         self.nb_of_turn += 1
         if(DEFINEIFPRINT == 1): print("A new turn begin : " + str(self.nb_of_turn))
 
-class BoardGame:         #TODO : for every cards, create a list
+class BoardGame:         # the brain of the program, it manages the progression of the player
     def __init__(self, config_board_game):
-        self.size = len(config_board_game) #nb of cases --> equal to the sum of cases
+        self.size = len(config_board_game) #40 in a classic monopoly
         self.list_of_case = []
-        self.index = 0
+        self.index = 0 #follow the progression of the player
         self.initialiseListOfCards(config_board_game)
-        self.nb_of_double = 0
+        self.nb_of_double = 0 #if 3 nb_of_double --> player go to jail
 
-    def initialiseListOfCards(self, config_board_game):     #TODO : sort the card by the order
+    def initialiseListOfCards(self, config_board_game):     #create a stack of card for both territory and effect cards
         i = 0
         while i < (self.size):
             if (config_board_game[i].keys()[0] == "territory"):
@@ -42,111 +41,118 @@ class BoardGame:         #TODO : for every cards, create a list
             i += 1
             self.list_of_case.append(case)
 
-    def goTo(self, position):
-        return position #Positiond of the jail 
+    def goTo(self, position): #used in target case effect
+        return position
 
-    def mostCloseGare(self):
+    def mostCloseGare(self): #return the position of the nearest gare
         value = 10 - ((self.index)%10 +5)
         if value > 0: return  value
         else : return value + 10
 
-    def mostCloseService(self):
-        if (self.index > 29 and self.index < 13):
+    def mostCloseService(self): #return the position of the nearest service
+        if (self.index > 28 and self.index < 13):
             return 13
-        else : return (29)
+        else : return (28)
 
     def __str__(self):
         for i in self.list_of_cards:
             return (i)
 
-    def move(self, card_stack_chance, card_stack_community_chest):
+    def move(self, card_stack_chance, card_stack_community_chest):  # change  the index according to the dice score and the effect card
         dice_score, isDouble = throwDices()
         self.index = (dice_score + self.index)%self.size
-        card = self.list_of_case[self.index]
+        case = self.list_of_case[self.index]
         if (DEFINEIFPRINT == 1) : print(" We are at position : "+str(self.index))
-        if (card.type == "territory"):  
-            card.arrived()
-        elif  card.type == "effect" :
-            if card.case_effect == 1: # Take a community chest
+        case.arrived()
+        if  case.type == "effect" : #first loop -> when we are on a new case effect, we are looking for what to do 
+            if case.case_effect == 1: # we are on a a community chest
                 card_case_effect = card_stack_community_chest.pullCard()
                 if card_case_effect == 1:
-                    self.index = self.goTo(11)
-                    print(" *I'm in Jail : ", self.index)
+                    self.index = self.goTo(10)
+                    self.list_of_case[self.index].arrived()
+                    if(DEFINEIFPRINT == 1):print(" *I'm in Jail : ", self.index)
                 if card_case_effect == 2:
                     self.index = self.goTo(0)
-                    print(" *I'm to the start case : ", self.index)
+                    self.list_of_case[self.index].arrived()
+                    if(DEFINEIFPRINT == 1):print(" *I'm to the start case : ", self.index)
                 if card_case_effect == 3:
                     pass
-            if card.case_effect == 2:
+            if case.case_effect == 2: # we pay taxes
                 pass
-            if card.case_effect == 3: # Take a chance
+            if case.case_effect == 3: # we take a chance
                 card_case_effect = card_stack_chance.pullCard()
-                if card_case_effect == 1:
+                if card_case_effect == 1: #step back 3 cases
                     self.index -= 3
-                    print(" *I go back 3 cases ", self.index)
-                if card_case_effect == 2: 
+                    self.list_of_case[self.index].arrived()
+                    if(DEFINEIFPRINT == 1):print(" *I go back 3 cases ", self.index)
+                if card_case_effect == 2: #go to rue de la paix
                     self.index = self.goTo(39)
-                    print(" *I'm now at Rue de la Paix : ", self.index)
+                    self.list_of_case[self.index].arrived()
+                    if(DEFINEIFPRINT == 1):print(" *I'm now at Rue de la Paix : ", self.index)
                 if card_case_effect == 3: #most close gare
-                    self.index += self.mostCloseGare()
-                    print(" *I'm to the nearest gare : ", self.index)
-                if card_case_effect == 4:
+                    self.index = (self.index + self.mostCloseGare())%self.size
+                    self.list_of_case[self.index].arrived()
+                    if(DEFINEIFPRINT == 1):print(" *I'm to the nearest gare : ", self.index)
+                if card_case_effect == 4: #go to begining
                     self.index = self.goTo(0)
-                    print(" *I'm to the start case : ", self.index)
-                if card_case_effect == 5:
-                    self.index = self.goTo(11)
-                    print(" *I'm in Jail : ", self.index)
+                    self.list_of_case[self.index].arrived()
+                    if(DEFINEIFPRINT == 1):print(" *I'm to the start case : ", self.index)
+                if card_case_effect == 5: #go to jail
+                    self.index = self.goTo(10)
+                    self.list_of_case[self.index].arrived()
+                    if(DEFINEIFPRINT == 1):print(" *I'm in Jail : ", self.index)
                 if card_case_effect == 6: # most close service
                     self.index = self.mostCloseService()
-                    print("Go to the nearest service : ", self.index)
-                if card_case_effect == 7:
-                    print(" *I'm now at Henri Martin : ", self.index)
-                    self.index = self.goTo(25)
-                if card_case_effect == 8:
-                    self.index = self.goTo(12)
-                    print(" *I'm now at Boulevard de Belleville : ", self.index)
+                    self.list_of_case[self.index].arrived()
+                    if(DEFINEIFPRINT == 1):print("Go to the nearest service : ", self.index)
+                if card_case_effect == 7: #go to Henri Martin
+                    if(DEFINEIFPRINT == 1):print(" *I'm now at Henri Martin : ", self.index)
+                    self.index = self.goTo(24)
+                    self.list_of_case[self.index].arrived()
+                if card_case_effect == 8: #go to Belleville
+                    self.index = self.goTo(11)
+                    self.list_of_case[self.index].arrived()
+                    if(DEFINEIFPRINT == 1):print(" *I'm now at Boulevard de Belleville : ", self.index)
                 if card_case_effect == 9:
                     pass
-            if card.case_effect == 4:
+            if case.case_effect == 4:
                 pass
-            if card.case_effect == 5:
-                self.index += self.goTo(11)
-                print(" *I'm in Jail : ", self.index)
-            if card.case_effect == 6:
+            if case.case_effect == 5: #go to jail
+                self.index = self.goTo(10)
+                self.list_of_case[self.index].arrived()
+                if(DEFINEIFPRINT == 1):print(" *I'm in Jail : ", self.index)
+            if case.case_effect == 6:
                 pass
-            if card.case_effect == 7:
+            if case.case_effect == 7:
                 pass
-            if card.case_effect == 1:
+            if case.case_effect == 1:
                 pass
         if(isDouble):
             self.nb_of_double += 1
-            if(self.nb_of_double == 3):
-                self.goTo(11)
+            if(self.nb_of_double == 3): #go to jail if we do 3 doubles
+                self.goTo(10) 
             else :
                 self.move(card_stack_chance, card_stack_community_chest)
         else : 
             self.nb_of_double = 0
 
-    def bilan(self):
+    def bilan(self): #prepare a list with  every  territory
         l = [x for x in self.list_of_case if x.type=="territory"]
         makeCamembert(l)
 
-class Case: #TODO : sum every occurences
+class Case: #generate every case of every kind
     def __init__(self, position, type):
         self.position = position
         self.occurs = 0
         self.type = type
-        pass
 
     def __str__(self):
         return ("La case : "+str(self.position))
 
-    def arrived(self):
+    def arrived(self): #when we arrived on the case, increment a counter
         self.occurs += 1
 
-        pass
-
-class CaseEffect(Case): #TODO : define type (chance, community), effect and target
+class CaseEffect(Case): #childen of Case focused on effect card
     def __init__(self, case_territory_config):
         Case.__init__(self, case_territory_config["position"], "effect")
         self.case_effect = case_territory_config["case_effect"] # Each case_effect_type will be represented by a number
@@ -154,17 +160,13 @@ class CaseEffect(Case): #TODO : define type (chance, community), effect and targ
     def __str__(self):
             return ("Case is : "+str(self.position)+" --> this is an effect")
 
-class CaseTerritory(Case):    #TODO : define color, average price and position
+class CaseTerritory(Case):    #childen of Case focused on territory
     def __init__(self, case_territory_config):
         Case.__init__(self, case_territory_config["position"], "territory")
         self.color = case_territory_config["color"] #color of the card
         self.price = case_territory_config["price"] #Price of the hotel
         self.occurs = 0
-        pass
-
-    def arrived(self):
-        self.occurs += 1
-        pass
+        self.name = case_territory_config["name"]
 
     def __str__(self):
             return ("Case is : "+str(self.position)+ " --> this is a ** " +self.color+" ** territory and it occurs : "+str(self.occurs))
@@ -172,19 +174,15 @@ class CaseTerritory(Case):    #TODO : define color, average price and position
     def result(self):
         print("The territory color "+self.color+" appears :"+str(self.occur)+"and cost : "+str(self.price))
 
-class Card:
-    def __init__(self, config_card):
+class Card: 
+    def __init__(self, config_card): #represent each card
         self.position = 1
         self.card_effect = config_card["card_effect"] # Each card_effect will be represented by a number
-        pass
 
     def __str__(self):
         return (" Card type is : "+str(self.card_effect)+" her position is "+str(self.position))
 
-    def readCard(self):
-        pass
-
-class CardStack:    #TODO : create buffer circular functions to simulate stack of cards
+class CardStack:    #create buffer circular functions to simulate stack of cards
     def __init__(self, config_card_stack):
         self.size_stack = len(config_card_stack)
         self.list_of_cards = []
@@ -204,26 +202,27 @@ class CardStack:    #TODO : create buffer circular functions to simulate stack o
             i.position = j
             j += 1
         
-    def pullCard(self):
+    def pullCard(self): #pick a new card
         self.occur += 1
         return self.list_of_cards[self.occur%self.size_stack].card_effect
 
 def play(): #handle the game
     config = getConfig()
+    global DEFINEIFPRINT
     DEFINEIFPRINT = int(config["MonopolyStatistics"]["Config"]["print"])
     game = Game(config["MonopolyStatistics"]["Rules"]["Game"])
     boardgame = BoardGame(config["MonopolyStatistics"]["Case"])
     card_stack_chance = CardStack(config["MonopolyStatistics"]["Cards"][0:len(config["MonopolyStatistics"]["Cards"])/2]) 
     card_stack_community_chest = CardStack(config["MonopolyStatistics"]["Cards"][len(config["MonopolyStatistics"]["Cards"])/2:len(config["MonopolyStatistics"]["Cards"])]) 
     i = 0
-    while i < game.nb_of_throw:
+    while i < game.nb_of_throw: #play the number of turn defined
         game.newTurn()
         boardgame.move(card_stack_chance, card_stack_community_chest)
         i += 1
     boardgame.bilan()
     pass
 
-def throwDices():    #TODO : generate 2 randint between 1 and 6
+def throwDices():    #generate 2 randint between 1 and 6
     dice1 = random.randint(1,6)
     dice2 = random.randint(1,6)
     dice = dice1 + dice2
@@ -232,22 +231,20 @@ def throwDices():    #TODO : generate 2 randint between 1 and 6
     return dice, isDouble
     pass
 
-def makeCamembert(l):
+def makeCamembert(l): #handle the display
     l.sort(key = lambda l: l.color)
-    labels = [x.color for x in l ]
+    labels = [x.name for x in l ]
     sizes = [x.occurs for x in l ]
     colors = [x.color for x in l ]
-    colors = [x if x != "gare" else "black" for x in colors ]
+    colors = [x if x != "gare" else "white" for x in colors ]
     colors = [x if x != "service" else "grey" for x in colors ]
     colors = [x if x != "blueligth" else "blue" for x in colors ]
-    print(colors)
     fig1, ax1 = plt.subplots()
-    ax1.pie(sizes, labels=labels,colors=colors)
+    ax1.pie(sizes, labels=labels,colors=colors,autopct = lambda x: str(round(x, 2)) + '%')
     ax1.axis('equal')  # Equal aspect ratio ensures that pie is drawn as a circle.
-
     plt.show()
 
-def getConfig():
+def getConfig(): #read the config from the configuration file
     with open('config.yml') as file:
         return yaml.load(file, Loader=yaml.FullLoader)
 

@@ -1,11 +1,11 @@
 MonopolyStatistics : {
   Config: {
-    print : 1
+    print : 0
   },
   Rules : {
     Game : {
       dice_faces : 6,
-      nb_of_throw : 100000,
+      nb_of_throw : 1000000,
       double_to_go_to_prison : 3,
     },
     GameBoard : {
@@ -20,7 +20,8 @@ MonopolyStatistics : {
     territory : {
       position : 1,
       color : "brown",
-      price : 250
+      price : 250,
+      name : "Boul de Belleville"
     },
     effect : {
       position : 2,
@@ -29,7 +30,8 @@ MonopolyStatistics : {
     territory : {
       position : 3,
       color : "brown",
-      price : 450
+      price : 450,
+      name : "Lecourbe"
     },
     effect : {
       position : 4,
@@ -38,12 +40,14 @@ MonopolyStatistics : {
     territory : {
       position : 5,
       color : "gare",
-      price : 200
+      price : 200,
+      name : "Gare Montparnasse"
     },
     territory : {
       position : 6,
       color : "blueligth",
-      price : 550
+      price : 550,
+      name : "Rue de Vaugirard"
     },
     effect : {
       position : 7,
@@ -52,12 +56,14 @@ MonopolyStatistics : {
     territory : {
       position : 8,
       color : "blueligth",
-      price : 550
+      price : 550,
+      name : "Rue des Courcelles"
     },
     territory : {
       position : 9,
       color : "blueligth",
-      price : 600
+      price : 600,
+      name : "Avenue de la République"
     },
     effect : {
       position : 10,
@@ -66,32 +72,38 @@ MonopolyStatistics : {
     territory : {
       position : 11,
       color : "purple",
-      price : 750
+      price : 750,
+      name : "Rue de la Villette"
     },
   territory : {
       position : 12,
       color : "service",
-      price : 120
+      price : 120,
+      name : "Comp d'Électricité"
     },
     territory : {
       position : 13,
       color : "purple",
-      price : 750
+      price : 750,
+      name : "Avenue de Neully"
     },
     territory : {
       position : 14,
       color : "purple",
-      price : 900
+      price : 900,
+      name : "Rue du Paradis"
     },
     territory : {
       position : 15,
       color : "gare",
-      price : 200
+      price : 200,
+      name : "Gare de Lyon"
     },
     territory : {
       position : 16,
       color : "orange",
-      price : 950
+      price : 950,
+      name : "Avenue de Mozart"
     },
     effect : {
       position : 17,
@@ -100,12 +112,14 @@ MonopolyStatistics : {
     territory : {
       position : 18,
       color : "orange",
-      price : 950
+      price : 950,
+      name : "Boul Saint-Michel"
     },
   territory : {
       position : 19,
       color : "orange",
-      price : 1000
+      price : 1000,
+      name : "Place Pigalle"
     },
     effect : {
       position : 20,
@@ -114,7 +128,8 @@ MonopolyStatistics : {
     territory : {
       position : 21,
       color : "red",
-      price : 1050
+      price : 1050,
+      name : "Avenue Matignon"
     },
     effect : {
       position : 22,
@@ -123,37 +138,44 @@ MonopolyStatistics : {
     territory : {
       position : 23,
       color : "red",
-      price : 1050
+      price : 1050,
+      name : "Boulevard Maleherbes"
     },
     territory : {
       position : 24,
       color : "red",
-      price : 1100
+      price : 1100,
+      name : "Avenue Henri Martin"
     },
     territory : {
       position : 25,
       color : "gare",
-      price : 200
+      price : 200,
+      name : "Gare du  Nord"
     },
     territory : {
       position : 26,
       color : "yellow",
-      price : 1150
+      price : 1150,
+      name : "Faubourg  Sant-Michel"
     },
     territory : {
       position : 27,
       color : "yellow",
-      price : 1150
+      price : 1150,
+      name : "Place de la Bourse"
     },
     territory : {
       position : 28,
       color : "service",
-      price : 120
+      price : 120,
+      name : "Comp des Eaux"
     },
     territory : {
       position : 29,
       color : "yellow",
-      price : 1200
+      price : 1200,
+      name : "Rue la Fayette"
     },
     effect : {
       position : 30,
@@ -162,12 +184,14 @@ MonopolyStatistics : {
     territory : {
       position : 31,
       color : "green",
-      price : 1275
+      price : 1275,
+      name : "Avenue de Breteuil"
     },
     territory : {
       position : 32,
       color : "green",
-      price : 1275
+      price : 1275,
+      name : "Avenue Foch"
     },
     effect : {
       position : 33,
@@ -176,12 +200,14 @@ MonopolyStatistics : {
     territory : {
       position : 34,
       color : "green",
-      price : 1400
+      price : 1400,
+      name : "Boul des Capucines"
     },
     territory : {
       position : 35,
       color : "gare",
-      price : 200
+      price : 200,
+      name : "Gare Saint Lazare"
     },
     effect : {
       position : 36,
@@ -190,7 +216,8 @@ MonopolyStatistics : {
     territory : {
       position : 37,
       color : "darkblue",
-      price : 1500
+      price : 1500,
+      name : "Avenue des Champs Élysées"
     },
     effect : {
       position : 38,
@@ -199,7 +226,8 @@ MonopolyStatistics : {
     territory : {
       position : 39,
       color : "darkblue",
-      price : 2000
+      price : 2000,
+      name : "Rue de la Paix"
     },
   ],
   Cards : [
