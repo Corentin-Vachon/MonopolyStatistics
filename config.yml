@@ -1,8 +1,11 @@
 MonopolyStatistics : {
+  Config: {
+    print : 1
+  },
   Rules : {
     Game : {
       dice_faces : 6,
-      nb_of_throw : 20,
+      nb_of_throw : 100000,
       double_to_go_to_prison : 3,
     },
     GameBoard : {
@@ -10,6 +13,10 @@ MonopolyStatistics : {
     },
   },
   Case : [
+    effect : {
+      position : 0,
+      case_effect : 8
+    },
     territory : {
       position : 1,
       color : "brown",
@@ -58,7 +65,7 @@ MonopolyStatistics : {
     },
     territory : {
       position : 11,
-      color : "pruple",
+      color : "purple",
       price : 750
     },
   territory : {
@@ -193,10 +200,6 @@ MonopolyStatistics : {
       position : 39,
       color : "darkblue",
       price : 2000
-    },
-    effect : {
-      position : 40,
-      case_effect : 8
     },
   ],
   Cards : [
