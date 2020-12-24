@@ -136,9 +136,9 @@ class BoardGame:         # the brain of the program, it manages the progression 
         else : 
             self.nb_of_double = 0
 
-    def bilan(self): #prepare a list with  every  territory
+    def bilan(self, config): #prepare a list with  every  territory
         l = [x for x in self.list_of_case if x.type=="territory"]
-        makeCamembert(l)
+        makeCamembert(l, config)
 
 class Case: #generate every case of every kind
     def __init__(self, position, type):
@@ -164,6 +164,7 @@ class CaseTerritory(Case):    #childen of Case focused on territory
     def __init__(self, case_territory_config):
         Case.__init__(self, case_territory_config["position"], "territory")
         self.color = case_territory_config["color"] #color of the card
+        self.display = case_territory_config["display"] #color of the card
         self.price = case_territory_config["price"] #Price of the hotel
         self.occurs = 0
         self.name = case_territory_config["name"]
@@ -219,7 +220,7 @@ def play(): #handle the game
         game.newTurn()
         boardgame.move(card_stack_chance, card_stack_community_chest)
         i += 1
-    boardgame.bilan()
+    boardgame.bilan(config)
     pass
 
 def throwDices():    #generate 2 randint between 1 and 6
@@ -231,44 +232,45 @@ def throwDices():    #generate 2 randint between 1 and 6
     return dice, isDouble
     pass
 
-def makeCamembert(l): #handle the display
+def makeCamembert(l, config): #handle the display
     l.sort(key = lambda l: l.color)
-    # labels = [x.name for x in l ]
-    # sizes = [x.occurs for x in l ]
-    # colors = [x.color for x in l ]
-    # colors = [x if x != "gare" else "white" for x in colors ]
-    # colors = [x if x != "service" else "grey" for x in colors ]
-    # colors = [x if x != "blueligth" else "blue" for x in colors ]
-
-    # fig1, ax1 = plt.subplots()
-    # ax1.pie(sizes, labels=labels,colors=colors,autopct = lambda x: str(round(x, 2)) + '%')
-    # ax1.axis('equal')  # Equal aspect ratio ensures that pie is drawn as a circle.
-    # plt.show()
-    sizes_out, labels_out, colors = [], [], []
-    for i in l:
-        if i.color not in labels_out:
-            labels_out.append(i.color)
-            sizes_out.append(i.occurs)
-            if (i.color == "gare"):colors.append("white")
-            elif (i.color == "service"):colors.append("grey")
-            else : colors.append(i.color)
-        else :
-            sizes_out[len(sizes_out)-1] += i.occurs
+    labels = [x.name for x in l ]
+    sizes = [x.occurs for x in l ]
+    colors = [x.color for x in l ]
+    colors = [x if x != "gare" else "white" for x in colors ]
+    colors = [x if x != "service" else "grey" for x in colors ]
     colors = [x if x != "blueligth" else "blue" for x in colors ]
-    sizes_in = [x.occurs for x in l ]
-    labels_in = [x.name for x in l ]
+
+    fig1, ax1 = plt.subplots()
+    ax1.pie(sizes, labels=labels,colors=colors,autopct = lambda x: str(round(x, 2)) + '%')
+    ax1.axis('equal')  # Equal aspect ratio ensures that pie is drawn as a circle.
+    plt.show()
+
+    sizes_in, labels_in,colors_in = [], [], []
+    for i in l:
+        if i.color not in labels_in:
+            labels_in.append(i.color)
+            sizes_in.append(i.occurs)
+            colors_in.append(i.color)
+        else :
+            sizes_in[len(sizes_in)-1] += i.occurs
+
+    colors_in = [x if x!="gare" else "white" for x in colors_in]
+    colors_in = [x if x!="service" else "grey" for x in colors_in]
+
+    sizes_out, labels_out,colors_out = [], [], []
+    sizes_out = [x.occurs for x in l ]
+    colors_out = [x.display for x in l ]
+    labels_out = [x.name for x in l ]
 
     fig, ax = plt.subplots()
     ax.axis('equal')
-    width = 0.3
+    width = 0.5
 
-    cm = plt.get_cmap("tab20c")
-    cout = cm(np.arange(10)*4)
-    pie, _ = ax.pie(sizes_out, radius=1, labels=labels_out, colors=colors)
+    pie, _ = ax.pie(sizes_out,  labels=labels_out, colors=colors_out)
     plt.setp( pie, width=width, edgecolor='white')
 
-    cin = cm(np.array([1,2,3,4,5,6,7,8,9,10]))
-    pie2, _ = ax.pie(sizes_in, radius=1-width, labels=labels_in,labeldistance=0.7, colors=cin)
+    pie2, _ = ax.pie(sizes_in, radius=1-width, labels=labels_in,labeldistance=0.7, colors=colors_in)
     plt.setp( pie2, width=width, edgecolor='white')
     plt.show()
 
