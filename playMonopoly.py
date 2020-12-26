@@ -25,11 +25,12 @@ class Game:     #TODO : define game var like : duration, nb of turn
 
 class BoardGame:         # the brain of the program, it manages the progression of the player
     def __init__(self, config_board_game):
-        self.size = len(config_board_game) #40 in a classic monopoly
+        self.size = len(config_board_game["Case"]) #40 in a classic monopoly
         self.list_of_case = []
         self.index = 0 #follow the progression of the player
-        self.initialiseListOfCards(config_board_game)
+        self.initialiseListOfCards(config_board_game["Case"])
         self.nb_of_double = 0 #if 3 nb_of_double --> player go to jail
+        info_card = config_board_game["Rules"]["GameBoard"]
 
     def initialiseListOfCards(self, config_board_game):     #create a stack of card for both territory and effect cards
         i = 0
@@ -58,8 +59,8 @@ class BoardGame:         # the brain of the program, it manages the progression 
         for i in self.list_of_cards:
             return (i)
 
-    def move(self, card_stack_chance, card_stack_community_chest):  # change  the index according to the dice score and the effect card
-        dice_score, isDouble = throwDices()
+    def move(self, card_stack_chance, card_stack_community_chest, game):  # change  the index according to the dice score and the effect card
+        dice_score, isDouble = throwDices(game.dice_faces)
         self.index = (dice_score + self.index)%self.size
         case = self.list_of_case[self.index]
         if (DEFINEIFPRINT == 1) : print(" We are at position : "+str(self.index))
@@ -129,10 +130,10 @@ class BoardGame:         # the brain of the program, it manages the progression 
                 pass
         if(isDouble):
             self.nb_of_double += 1
-            if(self.nb_of_double == 3): #go to jail if we do 3 doubles
-                self.goTo(10) 
+            if(self.nb_of_double == game.double_to_go_to_prison): #go to jail if we do double_to_go_to_prison doubles
+                self.index = self.goTo(10) 
             else :
-                self.move(card_stack_chance, card_stack_community_chest)
+                self.move(card_stack_chance, card_stack_community_chest, game)
         else : 
             self.nb_of_double = 0
 
@@ -212,20 +213,20 @@ def play(): #handle the game
     global DEFINEIFPRINT
     DEFINEIFPRINT = int(config["MonopolyStatistics"]["Config"]["print"])
     game = Game(config["MonopolyStatistics"]["Rules"]["Game"])
-    boardgame = BoardGame(config["MonopolyStatistics"]["Case"])
+    boardgame = BoardGame(config["MonopolyStatistics"])
     card_stack_chance = CardStack(config["MonopolyStatistics"]["Cards"][0:int(len(config["MonopolyStatistics"]["Cards"])/2)]) 
     card_stack_community_chest = CardStack(config["MonopolyStatistics"]["Cards"][int(len(config["MonopolyStatistics"]["Cards"])/2):len(config["MonopolyStatistics"]["Cards"])]) 
     i = 0
     while i < game.nb_of_throw: #play the number of turn defined
         game.newTurn()
-        boardgame.move(card_stack_chance, card_stack_community_chest)
+        boardgame.move(card_stack_chance, card_stack_community_chest, game)
         i += 1
     boardgame.bilan(config)
     pass
 
-def throwDices():    #generate 2 randint between 1 and 6
-    dice1 = random.randint(1,6)
-    dice2 = random.randint(1,6)
+def throwDices(dice_faces):    #generate 2 randint between 1 and 6
+    dice1 = random.randint(1,dice_faces)
+    dice2 = random.randint(1,dice_faces)
     dice = dice1 + dice2
     isDouble = dice1 == dice2
     if DEFINEIFPRINT == 1: print( " dices said : "+str(dice))
