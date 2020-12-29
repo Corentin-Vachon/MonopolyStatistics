@@ -130,7 +130,7 @@ class BoardGame:         # the brain of the program, it manages the progression 
         if(isDouble):
             self.nb_of_double += 1
             if(self.nb_of_double == 3): #go to jail if we do 3 doubles
-                self.goTo(10) 
+                self.index = self.goTo(10) 
             else :
                 self.move(card_stack_chance, card_stack_community_chest)
         else : 
