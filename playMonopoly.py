@@ -171,7 +171,7 @@ class CaseTerritory(Case):    #childen of Case focused on territory
         self.name = case_territory_config["name"]
 
     def __str__(self):
-            return ("Case is : "+str(self.position)+ " --> this is a ** " +self.color+" ** territory and it occurs : "+str(self.occurs))
+            return ("Case is : "+str(self.position)+ " --> this is a ** " +self.color+" ** territory and it occurs : "+str(self.occurs)+" the price is :"+str(self.price))
 
     def result(self):
         print("The territory color "+self.color+" appears :"+str(self.occur)+"and cost : "+str(self.price))
@@ -236,43 +236,41 @@ def throwDices(dice_faces):    #generate 2 randint between 1 and 6
 def makeCamembert(l, config): #handle the display
     l.sort(key = lambda l: l.color)
     labels = [x.name for x in l ]
-    sizes = [x.occurs for x in l ]
+    most_rentable_territory= [x.occurs*(x.price) for x in l ]
+    most_occuped_territory = [x.occurs for x in l ]
     colors = [x.color for x in l ]
     colors = [x if x != "gare" else "white" for x in colors ]
     colors = [x if x != "service" else "grey" for x in colors ]
     colors = [x if x != "blueligth" else "blue" for x in colors ]
 
-    fig1, ax1 = plt.subplots()
-    ax1.pie(sizes, labels=labels,colors=colors,autopct = lambda x: str(round(x, 2)) + '%')
-    ax1.axis('equal')  # Equal aspect ratio ensures that pie is drawn as a circle.
-    plt.show()
-
-    sizes_in, labels_in,colors_in = [], [], []
+    most_rentable_color,most_occuped_color, labels_in,colors_in = [], [], [], []
+    j = 0
     for i in l:
         if i.color not in labels_in:
             labels_in.append(i.color)
-            sizes_in.append(i.occurs)
+            most_rentable_color.append(i.occurs*i.price)
+            most_occuped_color.append(i.occurs)
             colors_in.append(i.color)
         else :
-            sizes_in[len(sizes_in)-1] += i.occurs
+            most_rentable_color[len(most_rentable_color)-1] += (most_rentable_territory[j]*most_occuped_territory[j])
+            most_occuped_color[len(most_occuped_color)-1] += (most_occuped_territory[j])
+        j += 1
 
     colors_in = [x if x!="gare" else "white" for x in colors_in]
     colors_in = [x if x!="service" else "grey" for x in colors_in]
 
-    sizes_out, labels_out,colors_out = [], [], []
-    sizes_out = [x.occurs for x in l ]
-    colors_out = [x.display for x in l ]
-    labels_out = [x.name for x in l ]
-
-    fig, ax = plt.subplots()
-    ax.axis('equal')
-    width = 0.5
-
-    pie, _ = ax.pie(sizes_out,  labels=labels_out, colors=colors_out)
-    plt.setp( pie, width=width, edgecolor='white')
-
-    pie2, _ = ax.pie(sizes_in, radius=1-width, labels=labels_in,labeldistance=0.7, colors=colors_in)
-    plt.setp( pie2, width=width, edgecolor='white')
+    fig1, ax1 = plt.subplots()
+    ax1.pie(most_occuped_territory, labels=labels,colors=colors,autopct = lambda x: str(round(x, 2)) + '%')
+    fig1.suptitle("occupation of each territory")
+    fig2, ax2 = plt.subplots()
+    ax2.pie(most_rentable_territory, labels=labels,colors=colors,autopct = lambda x: str(round(x, 2)) + '%')
+    fig2.suptitle("Rentability of each territory")
+    fig3, ax3 = plt.subplots()
+    ax3.pie(most_occuped_color, labels=labels_in,colors=colors_in,autopct = lambda x: str(round(x, 2)) + '%')
+    fig3.suptitle("occupation of each color")
+    fig4, ax4 = plt.subplots()
+    ax4.pie(most_rentable_color, labels=labels_in,colors=colors_in,autopct = lambda x: str(round(x, 2)) + '%')
+    fig4.suptitle("Rentability of each color")
     plt.show()
 
 def getConfig(): #read the config from the configuration file

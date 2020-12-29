@@ -1,39 +1,50 @@
 # MonopolyStatistics
 
-Monopoly gang prédictions 
+This program is able to simulate a large number of dices throws in a monopoly. The purpose is to get the probability to be on each territory and to determine which one is the most worth it. It's taking account of :
+* chance
+* community chest
+* go to jail case
+* go to jail after a given number of doubles 
 
-À prendre en compte :
-* 3 doubles —> prisons
-* 
+To use the program, you have to type :
 
-Carte chance à déplacement : 16
-* 1 : Reculer de trois cases
-* 2 : Rdv rue de la paix
-* 3 : Aller à la gare la plus proche * 3
-* 4 : Aller à la case départ 
-* 5 : Aller en prison
-* 6 : Aller à la compagnie de service publique la plus proche
-* 7 : Aller à l’avenue henrie martin
-* 8 : Aller à boulevard de belleville
-* 9 : Aucun effet
+python3 playMonopoly --> if you're running the python3 branch
 
- Carte caisse de comm à déplacement : 16
-* 1 : Aller en prison 
-* 2 : Aller à la case départ 
-* 3 : Aucun effet
+python3 playMonopoly --> if you're running the master branch
 
-Carte effet :
-* 1 : Prendre caisse de comm
-* 2 : Payer impôt sur le revenu
-* 3 : Prendre carte Chance
-* 4 : Visite prison
-* 5 : Aller en prison
-* 6 : Parc gratuit
-* 7 : Taxe sur la fortune
-* 8 : start
+The board game is based on the french version, if you're using an other one, you can change the cards and case in config.yml following your boardgame. You may also have to change the program if the “go to" card are different. You also can change the number of faces on your dices and the number of double in a row to go to prison.
 
-liste des effets :
-Chance :
+The french version implemented in the programm is based using the followings parameters
+
+Each effect card has one of this card_effect :
+
+Chance card which operates a move : 16
+* 1 : Step back 3 cases
+* 2 : Go to rue de la paix
+* 3 : Go to the most close gare * 3
+* 4 : Go to the start 
+* 5 : Go to jail
+* 6 : Go to the most close service
+* 7 : Go to avenue henrie martin
+* 8 : Go to boulevard de belleville
+* 9 : No effect * 7
+
+Community chest which operates a move : 16
+* 1 : Go to jail 
+* 2 : Go to the start 
+* 3 : No effect * 14
+
+Each case has one of this case_effect
+
+Type of "effect case" :
+* 1 : Take a community chest card
+* 2 : Pay income taxes
+* 3 : Take chance card
+* 4 : Prison visit
+* 5 : Go to jail
+* 6 : Free park
+* 7 : Pay taxe on fortune
+* 8 : Start
 
 
 ￼
