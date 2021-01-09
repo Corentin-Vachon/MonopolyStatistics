@@ -25,19 +25,20 @@ class Game:     #TODO : define game var like : duration, nb of turn
 
 class BoardGame:         # the brain of the program, it manages the progression of the player
     def __init__(self, config_board_game):
-        self.size = len(config_board_game) #40 in a classic monopoly
+        self.size = len(config_board_game["Case"]) #40 in a classic monopoly
         self.list_of_case = []
         self.index = 0 #follow the progression of the player
-        self.initialiseListOfCards(config_board_game)
+        self.initialiseListOfCards(config_board_game["Case"])
         self.nb_of_double = 0 #if 3 nb_of_double --> player go to jail
+        info_card = config_board_game["Rules"]["GameBoard"]
 
     def initialiseListOfCards(self, config_board_game):     #create a stack of card for both territory and effect cards
         i = 0
         while i < (self.size):
-            if (config_board_game[i].keys()[0] == "territory"):
-                case = CaseTerritory(config_board_game[i].values()[0]) 
-            elif (config_board_game[i].keys()[0] == "effect"):
-                case = CaseEffect(config_board_game[i].values()[0]) 
+            if (list(config_board_game[i].keys())[0] == "territory"):
+                case = CaseTerritory(list(config_board_game[i].values())[0]) 
+            elif (list(config_board_game[i].keys())[0] == "effect"):
+                case = CaseEffect(list(config_board_game[i].values())[0]) 
             i += 1
             self.list_of_case.append(case)
 
@@ -58,8 +59,8 @@ class BoardGame:         # the brain of the program, it manages the progression 
         for i in self.list_of_cards:
             return (i)
 
-    def move(self, card_stack_chance, card_stack_community_chest):  # change  the index according to the dice score and the effect card
-        dice_score, isDouble = throwDices()
+    def move(self, card_stack_chance, card_stack_community_chest, game):  # change  the index according to the dice score and the effect card
+        dice_score, isDouble = throwDices(game.dice_faces)
         self.index = (dice_score + self.index)%self.size
         case = self.list_of_case[self.index]
         if (DEFINEIFPRINT == 1) : print(" We are at position : "+str(self.index))
@@ -129,16 +130,16 @@ class BoardGame:         # the brain of the program, it manages the progression 
                 pass
         if(isDouble):
             self.nb_of_double += 1
-            if(self.nb_of_double == 3): #go to jail if we do 3 doubles
+            if(self.nb_of_double == game.double_to_go_to_prison): #go to jail if we do double_to_go_to_prison doubles
                 self.index = self.goTo(10) 
             else :
-                self.move(card_stack_chance, card_stack_community_chest)
+                self.move(card_stack_chance, card_stack_community_chest, game)
         else : 
             self.nb_of_double = 0
 
-    def bilan(self): #prepare a list with  every  territory
+    def bilan(self, config): #prepare a list with  every  territory
         l = [x for x in self.list_of_case if x.type=="territory"]
-        makeCamembert(l)
+        makeCamembert(l, config)
 
 class Case: #generate every case of every kind
     def __init__(self, position, type):
@@ -164,12 +165,13 @@ class CaseTerritory(Case):    #childen of Case focused on territory
     def __init__(self, case_territory_config):
         Case.__init__(self, case_territory_config["position"], "territory")
         self.color = case_territory_config["color"] #color of the card
+        self.display = case_territory_config["display"] #color of the card
         self.price = case_territory_config["price"] #Price of the hotel
         self.occurs = 0
         self.name = case_territory_config["name"]
 
     def __str__(self):
-            return ("Case is : "+str(self.position)+ " --> this is a ** " +self.color+" ** territory and it occurs : "+str(self.occurs))
+            return ("Case is : "+str(self.position)+ " --> this is a ** " +self.color+" ** territory and it occurs : "+str(self.occurs)+" the price is :"+str(self.price))
 
     def result(self):
         print("The territory color "+self.color+" appears :"+str(self.occur)+"and cost : "+str(self.price))
@@ -186,7 +188,7 @@ class CardStack:    #create buffer circular functions to simulate stack of cards
     def __init__(self, config_card_stack):
         self.size_stack = len(config_card_stack)
         self.list_of_cards = []
-        self.type = config_card_stack[0].keys()[0]
+        self.type = list(config_card_stack[0].keys())[0]
         self.initialiseStack(config_card_stack)
         self.occur = 0
 
@@ -211,37 +213,64 @@ def play(): #handle the game
     global DEFINEIFPRINT
     DEFINEIFPRINT = int(config["MonopolyStatistics"]["Config"]["print"])
     game = Game(config["MonopolyStatistics"]["Rules"]["Game"])
-    boardgame = BoardGame(config["MonopolyStatistics"]["Case"])
-    card_stack_chance = CardStack(config["MonopolyStatistics"]["Cards"][0:len(config["MonopolyStatistics"]["Cards"])/2]) 
-    card_stack_community_chest = CardStack(config["MonopolyStatistics"]["Cards"][len(config["MonopolyStatistics"]["Cards"])/2:len(config["MonopolyStatistics"]["Cards"])]) 
+    boardgame = BoardGame(config["MonopolyStatistics"])
+    card_stack_chance = CardStack(config["MonopolyStatistics"]["Cards"][0:int(len(config["MonopolyStatistics"]["Cards"])/2)]) 
+    card_stack_community_chest = CardStack(config["MonopolyStatistics"]["Cards"][int(len(config["MonopolyStatistics"]["Cards"])/2):len(config["MonopolyStatistics"]["Cards"])]) 
     i = 0
     while i < game.nb_of_throw: #play the number of turn defined
         game.newTurn()
-        boardgame.move(card_stack_chance, card_stack_community_chest)
+        boardgame.move(card_stack_chance, card_stack_community_chest, game)
         i += 1
-    boardgame.bilan()
+    boardgame.bilan(config)
     pass
 
-def throwDices():    #generate 2 randint between 1 and 6
-    dice1 = random.randint(1,6)
-    dice2 = random.randint(1,6)
+def throwDices(dice_faces):    #generate 2 randint between 1 and 6
+    dice1 = random.randint(1,dice_faces)
+    dice2 = random.randint(1,dice_faces)
     dice = dice1 + dice2
     isDouble = dice1 == dice2
     if DEFINEIFPRINT == 1: print( " dices said : "+str(dice))
     return dice, isDouble
     pass
 
-def makeCamembert(l): #handle the display
+def makeCamembert(l, config): #handle the display
     l.sort(key = lambda l: l.color)
     labels = [x.name for x in l ]
-    sizes = [x.occurs for x in l ]
+    most_rentable_territory= [x.occurs*(x.price) for x in l ]
+    most_occuped_territory = [x.occurs for x in l ]
     colors = [x.color for x in l ]
     colors = [x if x != "gare" else "white" for x in colors ]
     colors = [x if x != "service" else "grey" for x in colors ]
     colors = [x if x != "blueligth" else "blue" for x in colors ]
+
+    most_rentable_color,most_occuped_color, labels_in,colors_in = [], [], [], []
+    j = 0
+    for i in l:
+        if i.color not in labels_in:
+            labels_in.append(i.color)
+            most_rentable_color.append(i.occurs*i.price)
+            most_occuped_color.append(i.occurs)
+            colors_in.append(i.color)
+        else :
+            most_rentable_color[len(most_rentable_color)-1] += (most_rentable_territory[j]*most_occuped_territory[j])
+            most_occuped_color[len(most_occuped_color)-1] += (most_occuped_territory[j])
+        j += 1
+
+    colors_in = [x if x!="gare" else "white" for x in colors_in]
+    colors_in = [x if x!="service" else "grey" for x in colors_in]
+
     fig1, ax1 = plt.subplots()
-    ax1.pie(sizes, labels=labels,colors=colors,autopct = lambda x: str(round(x, 2)) + '%')
-    ax1.axis('equal')  # Equal aspect ratio ensures that pie is drawn as a circle.
+    ax1.pie(most_occuped_territory, labels=labels,colors=colors,autopct = lambda x: str(round(x, 2)) + '%')
+    fig1.suptitle("occupation of each territory")
+    fig2, ax2 = plt.subplots()
+    ax2.pie(most_rentable_territory, labels=labels,colors=colors,autopct = lambda x: str(round(x, 2)) + '%')
+    fig2.suptitle("Rentability of each territory")
+    fig3, ax3 = plt.subplots()
+    ax3.pie(most_occuped_color, labels=labels_in,colors=colors_in,autopct = lambda x: str(round(x, 2)) + '%')
+    fig3.suptitle("occupation of each color")
+    fig4, ax4 = plt.subplots()
+    ax4.pie(most_rentable_color, labels=labels_in,colors=colors_in,autopct = lambda x: str(round(x, 2)) + '%')
+    fig4.suptitle("Rentability of each color")
     plt.show()
 
 def getConfig(): #read the config from the configuration file
